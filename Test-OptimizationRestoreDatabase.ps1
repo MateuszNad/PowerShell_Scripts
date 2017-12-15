@@ -1,17 +1,17 @@
 <#
 .Synopsis
-    Skrypt do testowania parametrów BufferCount oraz MaxTransferSize dla przywracania bazy danych.
+    Skrypt do testowania parametrÃ³w BufferCount oraz MaxTransferSize dla przywracania bazy danych.
 .DESCRIPTION
-   Skrypt umo¿liwia RESTORE bazy danych z okreœlona iloœæ powtórzeñ. Skrypt na podstawie podanej, jako
-   parameter wartoœcia MaxTransferSize, SetOfBuffers oraz TotalMemory wylicza wartoœæ parametru BufferCount.
+   Skrypt umoÅ¼liwia RESTORE bazy danych z okreÅ›lona iloÅ›Ä‡ powtÃ³rzeÅ„. Skrypt na podstawie parameterÃ³w 
+   wartoÅ›cia MaxTransferSize, SetOfBuffers oraz TotalMemory wylicza wartoÅ›Ä‡ BufferCount.
 
-   Skrypt zwraca czas oraz szybkoœæ MB/sec. Odczytuje te wartoœci z dziennika bledow SQL Server, dlatego tez,
-   przed ka¿da operacja RESTORE wykonywana jest procedura sp_cycle_errorlog zamykajaca obecny dziennik bledow.
+   Skrypt zwraca czas oraz szybkoÅ›Ä‡ MB/sec. Odczytuje te wartoÅ›ci z dziennika bledow SQL Server, dlatego tez,
+   przed kaÅ¼da operacja RESTORE wykonywana jest procedura sp_cycle_errorlog zamykajaca obecny dziennik bledow.
 
-   Skrypt nie nale¿y stosowaæ w œrodowisku produkcyjnym.
-   Wymaga PowerShell 5.0 oraz modu³y SqlServer. 
+   Skrypt nie naleÅ¼y stosowaÄ‡ w Å›rodowisku produkcyjnym.
+   Wymaga PowerShell 5.0 oraz moduÅ‚y SqlServer. 
 .EXAMPLE
-  Test-RestoreDatabaseOptimization `
+  Test-OptimizationRestoreDatabase `
     -MaxTransferSize default,65536,524288,1048576,2097152,4194304 `
     -TotalMemory 1500 `
     -SetsofBuffers 2 `
@@ -23,8 +23,8 @@
    Author: Mateusz Nadobnik 
    Link: mnadobnik.pl
 
-   Date: 23.10.2017
-   Version: 1.0.0.0 
+   Date: 15.12.2017
+   Version: 1.0.0.1 
    Keywords: Restore, BufferCount, MaxTransferSize, TotalMemory, Duration, MB/sec, SqlServer
    Notes: 
    Changelog:
@@ -32,7 +32,7 @@
 
 #Requires -Version 5.0
 #Requires -Modules SqlServer
-function Test-RestoreDatabaseOptimization
+function Test-OptimizationRestoreDatabase
 {
     [CmdletBinding()]
     [Alias()]
@@ -51,24 +51,24 @@ function Test-RestoreDatabaseOptimization
         [Parameter(Mandatory=$true)]
         [string]$BackupPath,
 
-        #MaxTransferSize - maksymalna iloœæ danych, które bêd¹ przetwarzane na bufor
+        #MaxTransferSize - maksymalna iloÅ›Ä‡ danych, ktÃ³re bÄ™dÄ… przetwarzane na bufor
         [Parameter(Mandatory=$true)]
         [ValidateSet('65536', '524288', '1048576', '2097152', '4194304','default')]
         [array]$MaxTransferSize,
 
-        #Limit pamiêci to iloœæ pamiêci wewnêtrznej puli buforów, która jest dostêpna dla tego procesu tworzenia kopii /przywracania. 
+        #Limit pamiÄ™ci to iloÅ›Ä‡ pamiÄ™ci wewnÄ™trznej puli buforÃ³w, ktÃ³ra jest dostÄ™pna dla tego procesu tworzenia kopii /przywracania.Â 
         [Parameter(Mandatory=$false)]
         [int]$TotalMemory,
 
-        #Liczba Sets of Buffers, domyœlnie = 1
+        #Liczba Sets of Buffers, domyÅ›lnie = 1
         [Parameter(Mandatory=$false)]
         [int]$SetsofBuffers = 1,
         
-        #Liczba powtrzeñ
+        #Liczba powtrzeÅ„
         [Parameter(Mandatory=$false)]
         [int]$CountOfRepeat,
         
-        #Przerwa pomiêdzy odzyskiwaniami wyra¿ona w sekundach
+        #Przerwa pomiÄ™dzy odzyskiwaniami wyraÅ¼ona w sekundach
         [Parameter(Mandatory=$false)]
         [int]$Break = 10
     )
@@ -114,9 +114,9 @@ function Test-RestoreDatabaseOptimization
 
                 try 
                 {
-                            
+                    
                     $query += Restore-SqlDatabase -ServerInstance $ServerInstance -Database $Database -BackupFile $BackupPath `
-                    -ReplaceDatabase -BufferCount $BufferCount -MaxTransferSize $MaxTransferSize -Script 
+                    -ReplaceDatabase -BufferCount $BufferCount -MaxTransferSize $MaxTransferSize -Script
                     Write-Host "Restoring database $Database with options BufferCount $BufferCount and MaxTransferSize $MaxTransferSize" -ForegroundColor Yellow
                     #Write-Host $query
                     Invoke-Sqlcmd -ServerInstance $ServerInstance -Database master -Query $query -QueryTimeout 0
@@ -131,7 +131,7 @@ function Test-RestoreDatabaseOptimization
                 try 
                 {
                     $querResult = 'EXEC xp_ReadErrorLog 4, 1, "RESTORE DATABASE successfully"'
-                    $result = Invoke-Sqlcmd -ServerInstance $ServerInstance -Database msdb -Query $querResult -ErrorAction Stop
+                    $result = Invoke-Sqlcmd -ServerInstance $ServerInstance -Database msdb -Query $querResult
                     Write-Host $result.Text -ForegroundColor Yellow
                 
                     [regex]$regex = '\d{1,8}[\,\.]{1}\d{1,8}'
