@@ -1,9 +1,11 @@
 ## Synopsis
 
 Skrypt do testowania parametrów BufferCount oraz MaxTransferSize w celu optymalizacji przywracania bazy danych.
+http://mnadobnik.pl/2017/11/buffercount-i-maxtransfersize/
 
 ## Examples
 
+ ```
   Test-OptimizationRestoreDatabase `
     -MaxTransferSize default,65536,524288,1048576,2097152,4194304 `
     -TotalMemory 1500 `
@@ -12,3 +14,4 @@ Skrypt do testowania parametrów BufferCount oraz MaxTransferSize w celu optymal
     -ServerInstance SERWER-SQL\MSSQLSERVER14 -Database AdventureWorks2014 `
     -BackupPath 'E:\SQLBackup\AdventureWorks2014_C.bak' `
     -Break 30
+```
