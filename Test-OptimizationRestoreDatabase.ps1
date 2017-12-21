@@ -1,6 +1,7 @@
 <#
 .Synopsis
     Skrypt do testowania parametrów BufferCount oraz MaxTransferSize w celu optymalizacji przywracania bazy danych.
+    The script to test parameters BufferCount and MaxTransferSize for optimization database restore.
 .DESCRIPTION
    Skrypt umożliwia RESTORE bazy danych z określona ilość powtórzeń. Skrypt na podstawie parameterów 
    wartościa MaxTransferSize, SetOfBuffers oraz TotalMemory wylicza wartość BufferCount.

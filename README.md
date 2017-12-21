@@ -1,3 +1,3 @@
 ## Lists
-- Test-OptimizationRestoreDatabase: Skrypt do testowania parametrów BufferCount oraz MaxTransferSize w celu optymalizacji przywracania bazy danych.
+- Test-OptimizationRestoreDatabase: The script to test parameters BufferCount and MaxTransferSize for optimization database restore.
 - Get-SQLScriptDatabaseObjects: Returns script all user's objects in database
