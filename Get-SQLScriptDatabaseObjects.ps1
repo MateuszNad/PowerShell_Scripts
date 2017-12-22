@@ -2,10 +2,8 @@
 .Synopsis
     Returns script all user's objects in database
 .DESCRIPTION
-
-Returns all user's objects to files .sql
-The function will create directories with objects groups. Looks like it:
-Example:
+    Get-SQLScriptDatabaseObjects returns all user's objects to files .sql
+    The function will create directories with objects groups. Looks like it:
 
     Directory: D:\Schema\DBA
 
