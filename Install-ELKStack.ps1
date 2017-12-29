@@ -16,6 +16,7 @@
    Changelog: Next change: adding error handling and changing this script to the function
 #> 
 
+#requires -version 5
 #### Pre-setup ####
 
 #Directory for all ELK
