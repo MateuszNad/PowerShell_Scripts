@@ -76,15 +76,16 @@ Write-Host "Downloading, unpacking Elasticsearch to $Destination" -ForegroundCol
 Get-Resource -url $Elasticsearch.URL -destination $Destination -name $Elasticsearch.Name
 
 Write-Host
-Write-Host 'Expected message' -ForegroundColor Yellow
-Write-Host 'Installing service      :  "elasticsearch-service-x64"' -ForegroundColor Yellow
-Write-Host "Using JAVA_HOME (64-bit):  ""$([System.Environment]::GetEnvironmentVariable('JAVA_HOME'))""" -ForegroundColor Yellow
-Write-Host 'The service ''elasticsearch-service-x64'' has been installed.' -ForegroundColor Yellow
+Write-Host 'Expected message:' -ForegroundColor Green
+Write-Host 'Installing service      :  "elasticsearch-service-x64"' -ForegroundColor Green
+Write-Host "Using JAVA_HOME (64-bit):  ""$([System.Environment]::GetEnvironmentVariable('JAVA_HOME'))""" -ForegroundColor Green
+Write-Host 'The service ''elasticsearch-service-x64'' has been installed.' -ForegroundColor Green
 Write-Host
 
 Write-Host "Installation Elasticsearch" -ForegroundColor Yellow
 Invoke-Expression -command "$Destination\$($Elasticsearch.Name)\bin\elasticsearch-service.bat install”
 
+Write-Host
 Write-Host "Start service Elasticsearch"
 Write-Host "Change Startup type to Automatic"
 Get-Service elasticsearch* | Start-Service -PassThru
@@ -99,7 +100,9 @@ Sleep -Seconds 30
 Write-Host "Downloading, unpacking NSSM to $Destination" -ForegroundColor Yellow
 Get-Resource -url ($NSSM.URL) -destination $Destination -name ($NSSM.Name)
 
+
 #Step 3 - Install Logstash
+Write-Host 
 Write-Host "Downloading, unpacking Logstach to $Destination" -ForegroundColor Yellow
 Get-Resource -url $Logstach.URL -destination $Destination -name $Logstach.Name
 
@@ -111,8 +114,9 @@ Write-Host "Path: $Destination\$($Logstach.Name)\bin\Logstash.bat"
 Write-Host "Startup directory: $Destination\$($Logstach.Name)\bin"
 Write-Host "Arguments: -f $Destination\$($Logstach.Name)\bin\config.json"
 Invoke-Expression -command “$Destination\nssm\win64\nssm install $($Logstach.Name) $Destination\$($Logstach.Name)\bin\Logstash.bat '-f $Destination\$($Logstach.Name)\bin\config.json'”
-Write-Host "Check parameters and close NSSM" -ForegroundColor Yellow
-Invoke-Expression -command “$Destination\nssm\win64\nssm edit $($Logstach.Name)"
+#Delete below comments when you will want check parameter for services
+#Write-Host "Check parameters and close NSSM" -ForegroundColor Yellow
+#Invoke-Expression -command “$Destination\nssm\win64\nssm edit $($Logstach.Name)"
 
 Write-Host "Start service $($Logstach.Name)"
 Write-Host "Change Startup type to Automatic"
@@ -120,6 +124,7 @@ Get-Service $($Logstach.Name) | Start-Service -PassThru
 Get-Service $($Logstach.Name) | Set-Service -StartupType Automatic
 
 # Step 4 - Install Kibana
+Write-Host 
 Write-Host "Downloading, unpacking Kibana to $Destination" -ForegroundColor Yellow
 Get-Resource -url $Kibana.URL -destination $Destination -name $Kibana.Name
 
@@ -130,8 +135,9 @@ Write-Host "Parameters for NSSM"
 Write-Host "Path: $Destination\$($Kibana.Name)\bin\kibana.bat"
 Write-Host "Startup directory: $Destination\$($Kibana.Name)\bin"
 Invoke-Expression -command “$Destination\nssm\win64\nssm install $($Kibana.Name) $Destination\$($Kibana.Name)\bin\Kibana.bat”
-Write-Host "Check parameters and close NSSM" -ForegroundColor Yellow
-Invoke-Expression -command “$Destination\nssm\win64\nssm edit $($Kibana.Name)"
+#Delete below comments when you will want check parameter for services
+#Write-Host "Check parameters and close NSSM" -ForegroundColor Yellow
+#Invoke-Expression -command “$Destination\nssm\win64\nssm edit $($Kibana.Name)"
 
 Write-Host "Start service $($Kibana.Name)"
 Write-Host "Change Startup type to Automatic"
