@@ -4,8 +4,8 @@ function Get-CommandStatistic {
    Statystyki wykorzystania komend w skryptach
 
 .DESCRIPTION
-  Funkcja parsuję wszystkie skrypty ps1 z wskazanej w parametrze lokalizacji w celu zwrócenia listy najczęściej 
-  wykorzystywanych komend wraz z ilością wystąpień.
+  Funkcja parsuję wszystkie skrypty .ps1 z wskazanej w parametrze lokalizacji w celu zwrócenia listy
+   wykorzystywanych komend wraz z ilością wystąpień.
 
 .EXAMPLE
     Get-CommandStatistic -Path 'C:\PowerShell\Przyklad' 
@@ -17,7 +17,7 @@ function Get-CommandStatistic {
     ...
     New-PSResourceGroup                          2
 
-    Ścieżka do funkcji przekazana parametrem -Path.
+    Ścieżka do funkcji przekazana parametrem -Path zwróci wszystkie znalezione polecenia w przypadkowej kolejności.
 
 .EXAMPLE
     Get-CommandStatistic -Path 'C:\PowerShell\Przyklad' | Sort-Object -Property Count -Descending | Select-Object -First 10
@@ -30,7 +30,7 @@ function Get-CommandStatistic {
     ForEach-Object                4
     Out-Null                      3
 
-    Wyniki funkcji posortowane i ograniczone do pierwszych 10.
+    Wyniki funkcji zostaną posortowane i ograniczone do pierwszych 10 o największej liczbie wystąpień.
 
 .NOTES
    Author: Mateusz Nadobnik
@@ -49,7 +49,7 @@ function Get-CommandStatistic {
     )
     [array]$Command = $null
     if (Test-Path -Path $Path) {
-        # Pobranie wszystkich plików ps1 również tych w podfolderach
+        # Pobranie wszystkich plików .ps1 również tych w podfolderach
         $Scripts = Get-ChildItem -Path $Path -Recurse -Filter *.ps1
         foreach ($Script in $Scripts) {
             
