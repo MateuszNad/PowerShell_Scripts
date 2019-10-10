@@ -1,5 +1,4 @@
-function Get-CommandStatistic {
-    <#
+<#
 .Synopsis
    Statystyki wykorzystania komend w skryptach
 
@@ -8,7 +7,7 @@ function Get-CommandStatistic {
    wykorzystywanych komend wraz z ilością wystąpień.
 
 .EXAMPLE
-    Get-CommandStatistic -Path 'C:\PowerShell\Przyklad' 
+    Get-CommandStatistic -Path 'C:\PowerShell\Przyklad'
 
     Command                                  Count
     -------                                  -----
@@ -35,42 +34,66 @@ function Get-CommandStatistic {
 .NOTES
    Author: Mateusz Nadobnik
    Link: https://akademiapowershell.pl
- 
+
    Date:    2019.01.01
    Version: 0.1.0
-   Keywords: Command, Statistic, Parse, Tokenize 
-   Notes: 
+   Keywords: Command, Statistic, Parse, Tokenize
+   Notes:
    Changelog:
 #>
+function Get-CommandStatistic
+{
     [cmdletbinding()]
     param (
         [Parameter(Mandatory)]
         [string]$Path
     )
+
+
     [array]$Command = $null
-    if (Test-Path -Path $Path) {
+    if (Test-Path -Path $Path)
+    {
+        $VerbosePreference = 'Continue'
+        $Path = 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell'
+
+        $ElapsedTime = [System.Diagnostics.Stopwatch]::StartNew()
+
         # Pobranie wszystkich plików .ps1 również tych w podfolderach
         $Scripts = Get-ChildItem -Path $Path -Recurse -Filter *.ps1
-        foreach ($Script in $Scripts) {
-            
-            try {
+        Write-Verbose ("{0};Get-ChildItem" -f $ElapsedTime.Elapsed)
+
+        $ElapsedTime.Restart()
+        foreach ($Script in $Scripts)
+        {
+            try
+            {
                 $ContentScript = Get-Content -Path $Script.FullName -ErrorAction 'Stop'
             }
-            catch {
+            catch
+            {
                 $ContentScript = $null
             }
 
-            if ($ContentScript) {
+            if ($ContentScript)
+            {
                 $Command += [System.Management.Automation.PSParser]::Tokenize($ContentScript, [ref]$null)
             }
         }
+        Write-Verbose ("{0};Tokenize" -f $ElapsedTime.Elapsed)
+
+        $ElapsedTime.Restart()
+
         # wyszukanie komend, pogrupowanie i selekcja włsciwosci
         $GroupedCommand = ($Command | Where-Object Type -eq 'Command' | Group-Object -Property Content |
             Select-Object -Property @{L = 'Command'; E = { $_.Name } }, Count)
-                
-        Write-Output $GroupedCommand
-    }
-    else {
-        Write-Warning "Podana ścieżka nie istnieje."
-    }
+
+    Write-Verbose ("{0};Group-Object" -f $ElapsedTime.Elapsed)
+    Write-Output $GroupedCommand
+
+    $ElapsedTime.Stop()
+}
+else
+{
+    Write-Warning "Podana ścieżka nie istnieje."
+}
 }
