@@ -37,28 +37,35 @@ Function Where-Value
     )
     Process
     {
-        $DefaultProperties = ($PSItem | Get-TypeData).DefaultDisplayPropertySet.ReferencedProperties
-
         $PSItem.PSObject.Properties | ForEach-Object {
             # Value search
-            if ($_.Value -like $value )
+            if ($_.Value -match $value)
             {
                 # Adding to the variable name of property`
                 [array]$ValueInProperty += $_.Name
             }
         }
-        if ($ValueInProperty)
-        {
-            # Adding a new property to the
 
-            $PSItem | Add-Member -MemberType NoteProperty -Name "ValueInProperty" -Value $ValueInProperty
-            $DefaultProperties = ($PSItem | Get-TypeData).DefaultDisplayPropertySet.ReferencedProperties
-            $DefaultProperties = $DefaultProperties + 'ValueInProperty'
-            # $DefaultProperties
-            # $PSItem
-            # $PSItem | Update-TypeData -DefaultDisplayPropertySet $DefaultProperties
-            Remove-Variable -Name ValueInProperty
+        if ([array]$ValueInProperty)
+        {
+            # Adding a new property
+            #$PSItem | Add-Member -MemberType NoteProperty -Name "ValueInProperty" -Value $ValueInProperty
+            #Remove-Variable -Name ValueInProperty
             Write-Output $PSItem
         }
     }
+    End
+    {
+        Write-Verbose "The value $Value contains property: $ValueInProperty"
+    }
 }
+
+
+
+<#
+Ciekawy wpis. Dodam od siebie, że pierwsze zadanie najłatwiej wykonać: Get-Service | Select *Name*  Drugie faktycznie nie należy do tych trywialnych.
+
+Co do 'Stopped' jako true, wydaje mi się, że to wynika, z niejawnej konwersji liczbowej wartości tego statusu (1) do typu [Bool]
+[System.ServiceProcess.ServiceControllerStatus]::Stopped.value__ -eq $true
+[System.ServiceProcess.ServiceControllerStatus]::Running.value__ -eq $false
+#>

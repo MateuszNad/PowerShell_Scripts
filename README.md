@@ -6,3 +6,4 @@
 
 #### Other
 - [Format-ToSplatting](https://github.com/MateuszNad/PowerShell_Scripts/blob/master/Format-ToSplatting.ps1): Function helps formatting parameters to splatting
+- [Start-WindowsTerminal](https://github.com/MateuszNad/PowerShell_Scripts/blob/master/Start-WindowsTerminal.ps1): The function helps run multiple command-line applications next to each other within the same tab in Windows Terminal.
