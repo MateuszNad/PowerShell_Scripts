@@ -1,3 +1,18 @@
+<#PSScriptInfo
+.VERSION 0.1.0-beta
+.GUID 37d04a23-1d4b-43c3-9c2a-e145a8598f27
+.AUTHOR Mateusz Nadobnik
+.COMPANYNAME AkademiaPowerShell
+.COPYRIGHT
+.TAGS Windows Terminal, wt, wt.exe, pane, start, Terminal
+.LICENSEURI
+.PROJECTURI https://github.com/MateuszNad/PowerShell_Scripts/blob/master/Start-WindowsTerminal.ps1
+.ICONURI
+.EXTERNALMODULEDEPENDENCIES
+.REQUIREDSCRIPTS
+.EXTERNALSCRIPTDEPENDENCIES
+.RELEASENOTES
+#>
 <#
 .SYNOPSIS
     The function helps run multiple command-line applications next to each other within the same tab in Windows Terminal
