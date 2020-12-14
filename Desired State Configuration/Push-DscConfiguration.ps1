@@ -15,7 +15,7 @@ function Push-DscConfiguration
         {
             Install-RequiredModule -Path $Path -ComputerName $ComputerName
 
-
+            Publish-DscConfiguration
         }
     }
 }

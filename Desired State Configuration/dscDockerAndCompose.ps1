@@ -1,15 +1,18 @@
-#Requires -Module PackageManagement, ComputerManagementDsc
+#Requires -Module PackageManagement, ComputerManagementDsc, PowerSTIG
 
 Configuration DockerAndCompose
 {
     param(
         [Parameter(Mandatory)]
-        [string]$DockerComposeUri
+        [string]$DockerComposeUri,
+        [string]$ComputerName
     )
     Import-DscResource -Module @{ModuleName = "PackageManagement"; ModuleVersion = "1.4.7" }
     Import-DscResource -Module @{ModuleName = "ComputerManagementDsc"; ModuleVersion = "8.4.0" }
 
-    Node localhost
+    Import-DSCResource -Name PowerSTIG
+
+    Node $ComputerName
     {
         WindowsFeature WF-Containers
         {
