@@ -1,0 +1,39 @@
+{
+  "Verb": "Get",
+  "Noun": "DockerContainer",
+  "OriginalName": "docker",
+  "OriginalCommandElements": [
+    "ps",
+    "--format",
+    "{{json .}}"
+  ],
+  "Aliases": null,
+  "DefaultParameterSetName": null,
+  "SupportsShouldProcess": false,
+  "SupportsTransactions": false,
+  "NoInvocation": false,
+  "Description": "The example of use the Microsoft.PowerShell.Crescendo module",
+  "Usage": null,
+  "Parameters": [
+    {
+      "Name": "Force",
+      "OriginalName": "--all",
+      "ParameterType": "switch"
+    },
+    {
+      "Name": "Filter",
+      "NoGap": false,
+      "OriginalName": "--filter",
+      "ParameterType": "string"
+    }
+  ],
+  "Examples": null,
+  "OriginalText": null,
+  "HelpLinks": null,
+  "OutputHandlers": [
+    {
+      "ParameterSetName": "Default",
+      "Handler": "$args[0] | ConvertFrom-Json"
+    }
+  ]
+}
