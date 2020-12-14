@@ -10,8 +10,6 @@ Configuration DockerAndCompose
     Import-DscResource -Module @{ModuleName = "PackageManagement"; ModuleVersion = "1.4.7" }
     Import-DscResource -Module @{ModuleName = "ComputerManagementDsc"; ModuleVersion = "8.4.0" }
 
-    Import-DSCResource -Name PowerSTIG
-
     Node $ComputerName
     {
         WindowsFeature WF-Containers
