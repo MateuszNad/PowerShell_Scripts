@@ -1,7 +1,7 @@
 {
-  "Verb": "Get",
-  "Noun": "DockerContainer",
-  "OriginalName": "docker",
+  "Verb": "Get", //required
+  "Noun": "DockerContainer", //required
+  "OriginalName": "docker", //required
   "OriginalCommandElements": [
     "ps",
     "--format",
@@ -23,17 +23,40 @@
     {
       "Name": "Filter",
       "NoGap": false,
+      // --filter
+      // name=th
+      // if NoGap: true
+      // --filter"name=th"
       "OriginalName": "--filter",
       "ParameterType": "string"
     }
   ],
-  "Examples": null,
+  "Examples": [
+    {
+      "Command": "Get-DockerContainer",
+      "OriginalCommand": "docker ps",
+      "Description": "List containers",
+      "OriginalText": null
+    },
+    {
+      "Command": "Get-DockerContainer -Force",
+      "OriginalCommand": "docker ps -a",
+      "Description": "List all containers",
+      "OriginalText": null
+    },
+    {
+      "Command": "Get-DockerContainer -Force -Filter",
+      "OriginalCommand": "docker ps -a -f",
+      "Description": "Filter output based on conditions provided",
+      "OriginalText": null
+    }
+  ],
   "OriginalText": null,
   "HelpLinks": null,
   "OutputHandlers": [
     {
-      "ParameterSetName": "Default",
-      "Handler": "$args[0] | ConvertFrom-Json"
+      "ParameterSetName": "Default", //required
+      "Handler": "if($args) {$args[0] | ConvertFrom-Json}" //required
     }
   ]
 }
