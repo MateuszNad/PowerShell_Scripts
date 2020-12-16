@@ -6,8 +6,14 @@ Export-CrescendoModule -ConfigurationFile .\example.docker.json -ModuleName dock
 Remove-Module -Name Docker -ErrorAction SilentlyContinue
 Import-Module .\docker.psm1
 
+
+Get-Command -Module Docker
+# CommandType     Name                                               Version    Source
+# ----------      -----                                              ------ - ------
+# Function        Get-DockerContainer                                0.0        docker
+
 # example
-Get-DockerContainer -Force -Filter 'name=thaa'
+Get-DockerContainer -Force -Filter 'name=th'
 
 # Command      : "dotnet HotelReserva…"
 # CreatedAt    : 2020-03-19 15:52:07 +0100 CET
