@@ -1,0 +1,18 @@
+{
+  "Verb": "Get",
+  "Noun": "DockerContainer",
+  "OriginalName": null,
+  "OriginalCommandElements": null,
+  "Aliases": null,
+  "DefaultParameterSetName": null,
+  "SupportsShouldProcess": false,
+  "SupportsTransactions": false,
+  "NoInvocation": false,
+  "Description": null,
+  "Usage": null,
+  "Parameters": [],
+  "Examples": [],
+  "OriginalText": null,
+  "HelpLinks": null,
+  "OutputHandlers": null
+}

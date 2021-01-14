@@ -30,7 +30,7 @@ function Install-RequiredModule
     process
     {
         $ForceParam = $false
-        if ($PSCmdlet.ShouldProcess("Target", "Operation"))
+        if ($PSCmdlet.ShouldProcess("$ComputerName", "Install-RequiredModule"))
         {
             $WhatIf = $false
         }
@@ -51,6 +51,12 @@ function Install-RequiredModule
         try
         {
             # $ContentFile = Get-Content $Path -Raw
+            if (-not(Test-Path $Path))
+            {
+                Write-Output "Nie poprawna sciezka do pliku"
+                return
+            }
+
             $RequiredPS = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$null, [ref]$null).ScriptRequirements
 
             foreach ($RequiredModule in $RequiredPS.RequiredModules)
@@ -85,7 +91,7 @@ function Install-RequiredModule
                 }
                 else
                 {
-                    Install-Module @paramInstallModule -Force:$ForceParam
+                    Install-Module @paramInstallModule
                 }
             }
         }
@@ -98,15 +104,15 @@ function Install-RequiredModule
 }
 
 
-Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\dscDockerAndCompose.ps1' -Force -WhatIf -Verbose
-Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\Install-RequiredModule.test.ps1' -ComputerName '10.10.0.24' -Force -Credential administrator  -Verbose
+# Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\dscDockerAndCompose.ps1' -Force -WhatIf -Verbose
+# Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\Install-RequiredModule.test.ps1' -ComputerName '10.10.0.24' -Force -Credential administrator  -Verbose
 
-DockerAndCompose -DockerComposeUri 'https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Windows-x86_64.exe' -ComputerName 10.10.0.24
-Publish-DscConfiguration -Path .\DockerAndCompose -Verbose -Credential administrator -ComputerName 10.10.0.24 -Force
-Start-DscConfiguration -ComputerName 10.10.0.24 -Force -Wait -Path .\DockerAndCompose -Credential administrator
+# DockerAndCompose -DockerComposeUri 'https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Windows-x86_64.exe' -ComputerName 10.10.0.24
+# Publish-DscConfiguration -Path .\DockerAndCompose -Verbose -Credential administrator -ComputerName 10.10.0.24 -Force
+# Start-DscConfiguration -ComputerName 10.10.0.24 -Force -Wait -Path .\DockerAndCompose -Credential administrator
 
 
-Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\Agent\dscInstallAgent.ps1' -ComputerName '10.10.0.24' -Force -Credential administrator  -Verbose
-Get-MMAgent -ComputerName 10.10.0.24 -Verbose -OPSINSIGHTS_WS_ID '1fc1ae0a-ee55-4070-9691-dc1adc10797f' -OPSINSIGHTS_WS_KEY 'V41bggEBvCY8La6xraSz4xWirKutLuGM4xHE1ZRRIQM71nzeE3D8DiRpJUTyGz5zK9pc6qwcHj/d8R9OfDCirQ=='
-Publish-DscConfiguration -Path .\MMAgent -ComputerName '10.10.0.24' -Credential administrator -Verbose -Force
-Start-DscConfiguration -Credential administrator -ComputerName 10.10.0.24 -Wait -Path .\MMAgent -Force
+# Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\Agent\dscInstallAgent.ps1' -ComputerName '10.10.0.24' -Force -Credential administrator  -Verbose
+# Get-MMAgent -ComputerName 10.10.0.24 -Verbose -OPSINSIGHTS_WS_ID '1fc1ae0a-ee55-4070-9691-dc1adc10797f' -OPSINSIGHTS_WS_KEY ''
+# Publish-DscConfiguration -Path .\MMAgent -ComputerName '10.10.0.24' -Credential administrator -Verbose -Force
+# Start-DscConfiguration -Credential administrator -ComputerName 10.10.0.24 -Wait -Path .\MMAgent -Force
