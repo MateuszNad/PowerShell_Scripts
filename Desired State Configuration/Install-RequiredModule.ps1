@@ -1,19 +1,10 @@
-# $a = @'
-#Requires -Module PackageManagement, ComputerManagementDsc
-# #Requires -RunAsAdministrator
-# #Requires -Modules @{ ModuleName="AzureRM.Netcore"; MaximumVersion="0.12.0" }
-# #Requires -PSEdition Core
-# #Requires -Version 7
+<#
+ .EXAMPLE
+  PS C:\> Install-RequiredModule -Path 'C:\dscConfiguration.ps1' -Force -WhatIf -Verbose
 
-# Wirte-Host 'test'
-# '@
-
-
-# $test = [ScriptBlock]::Create($a)
-# $RequiredPS = $test.Ast.ScriptRequirements
-
-# $RequiredPS
-
+ .EXAMPLE
+  PS C:\> Install-RequiredModule -Path 'C:\dscConfiguration.ps1' -Force -Verbose
+#>
 function Install-RequiredModule
 {
     [cmdletbinding(SupportsShouldProcess)]
@@ -104,8 +95,6 @@ function Install-RequiredModule
 }
 
 
-# Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\dscDockerAndCompose.ps1' -Force -WhatIf -Verbose
-# Install-RequiredModule -Path 'C:\Users\Lenovo\Documents\Projekty\12_PowerShell\15_Repositories\PowerShell_Scripts\Desired State Configuration\Install-RequiredModule.test.ps1' -ComputerName '10.10.0.24' -Force -Credential administrator  -Verbose
 
 # DockerAndCompose -DockerComposeUri 'https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Windows-x86_64.exe' -ComputerName 10.10.0.24
 # Publish-DscConfiguration -Path .\DockerAndCompose -Verbose -Credential administrator -ComputerName 10.10.0.24 -Force
@@ -116,3 +105,6 @@ function Install-RequiredModule
 # Get-MMAgent -ComputerName 10.10.0.24 -Verbose -OPSINSIGHTS_WS_ID '1fc1ae0a-ee55-4070-9691-dc1adc10797f' -OPSINSIGHTS_WS_KEY ''
 # Publish-DscConfiguration -Path .\MMAgent -ComputerName '10.10.0.24' -Credential administrator -Verbose -Force
 # Start-DscConfiguration -Credential administrator -ComputerName 10.10.0.24 -Wait -Path .\MMAgent -Force
+
+
+Start-DscConfiguration -ComputerName 10.10.0.24 -Force -Wait -Path .\DockerAndCompose -Credential administrator

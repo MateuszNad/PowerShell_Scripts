@@ -1,4 +1,7 @@
-#Requires -Module xPSDesiredStateConfiguration
+﻿#Requires -Module xPSDesiredStateConfiguration
+
+# installing the Log Analytics agent on Windows computers
+# https://docs.microsoft.com/en-gb/azure/azure-monitor/platform/agent-windows#install-agent-using-dsc-in-azure-automation
 
 Configuration MMAgent {
     param(        
@@ -12,6 +15,7 @@ Configuration MMAgent {
     )
 
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
 
     Node $ComputerName {
         Service OIService
