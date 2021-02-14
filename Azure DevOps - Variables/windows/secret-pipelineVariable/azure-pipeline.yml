@@ -1,0 +1,28 @@
+trigger:
+  paths:
+    include:
+      - windows/secret-pipelineVariable/*
+
+pool:
+  vmImage: "windows-latest"
+
+steps:
+  - task: PowerShell@2
+    displayName: "pipelineVariable - inline"
+    env:
+      mappedSecretPipelineVariable: $(secretPipelineVariable)
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:mappedSecretPipelineVariable)"
+
+  - task: PowerShell@2
+    displayName: "pipelineVariable - filePath"
+    env:
+      mappedSecretPipelineVariable: $(secretPipelineVariable)
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/secret-script.ps1"
+      arguments: -Secret $($env:mappedSecretPipelineVariable)

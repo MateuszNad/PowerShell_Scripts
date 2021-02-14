@@ -1,0 +1,42 @@
+trigger:
+  paths:
+    include:
+      - ubuntu/pipelineVariable/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+# variables:
+
+steps:
+  - task: PowerShell@2
+    displayName: "pipelineVariable - inline"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $(pipelineVariable)"
+
+  - task: PowerShell@2
+    displayName: "pipelineVariable - filePath"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $(pipelineVariable)
+
+  - task: PowerShell@2
+    displayName: "pipelineVariable - inline - $env"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:PIPELINEVARIABLE)"
+
+  - task: PowerShell@2
+    displayName: "pipelineVariable - filePath - $env"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $($env:PIPELINEVARIABLE)

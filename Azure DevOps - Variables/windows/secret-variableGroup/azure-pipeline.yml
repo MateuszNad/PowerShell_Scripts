@@ -1,0 +1,31 @@
+trigger:
+  paths:
+    include:
+      - windows/secret-variableGroup/*
+
+pool:
+  vmImage: "windows-latest"
+
+variables:
+  - group: SecureVariableGroup
+
+steps:
+  - task: PowerShell@2
+    displayName: "KeyVault - inline"
+    env:
+      mappedPassword: $(password)
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:mappedPassword)"
+
+  - task: PowerShell@2
+    displayName: "KeyVault - filePath"
+    env:
+      mappedPassword: $(password)
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/secret-script.ps1"
+      arguments: -Secret $($env:mappedPassword)

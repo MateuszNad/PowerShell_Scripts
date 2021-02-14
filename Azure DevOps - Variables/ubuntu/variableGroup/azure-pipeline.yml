@@ -1,0 +1,43 @@
+trigger:
+  paths:
+    include:
+      - ubuntu/variableGroup/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  - group: VariableGroup
+
+steps:
+  - task: PowerShell@2
+    displayName: "VariableGroup - inline"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $(vgVariable)"
+
+  - task: PowerShell@2
+    displayName: "VariableGroup - filePath"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $(vgVariable)
+
+  - task: PowerShell@2
+    displayName: "VariableGroup - inline - $env"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:VGVARIABLE)"
+
+  - task: PowerShell@2
+    displayName: "VariableGroup - filePath - $env"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $($env:VGVARIABLE)

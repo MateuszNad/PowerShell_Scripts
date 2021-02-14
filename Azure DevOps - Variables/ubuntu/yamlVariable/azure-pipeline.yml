@@ -1,0 +1,44 @@
+trigger:
+  paths:
+    include:
+      - ubuntu/yamlVariable/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  yamlVariable: "yamlVariableValue"
+
+# zmienna środowiskowa
+steps:
+  - task: PowerShell@2
+    displayName: "yamlVariable - inline"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $(yamlVariable)"
+
+  - task: PowerShell@2
+    displayName: "yamlVariable - filePath"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $(yamlVariable)
+
+  - task: PowerShell@2
+    displayName: "yamlVariable - inline - $env"
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:YAMLVARIABLE)"
+
+  - task: PowerShell@2
+    displayName: "yamlVariable - filePath - $env"
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $($env:YAMLVARIABLE)

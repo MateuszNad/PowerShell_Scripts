@@ -1,0 +1,30 @@
+trigger:
+  paths:
+    include:
+      - windows/precedence/*
+
+variables:
+  varScopeRoot: "value0"
+  varExamplePrecedence: "A"
+
+stages:
+  - stage:
+    pool:
+      vmImage: "ubuntu-latest"
+    variables:
+      varScopeStage: "value1"
+      varExamplePrecedence: "B"
+    jobs:
+      - job: "test"
+        variables:
+          varScopeJob: "value2"
+          varExamplePrecedence: "C"
+        steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: inline
+              script: |
+                Write-Output $(varScopeRoot)
+                Write-Output $(varScopeStage)
+                Write-Output $(varScopeJob)
+                Write-Output $(varExamplePrecedence)

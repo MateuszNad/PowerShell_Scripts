@@ -1,0 +1,28 @@
+trigger:
+  paths:
+    include:
+      - windows/env/*
+
+pool:
+  vmImage: "windows-latest"
+
+steps:
+  - task: PowerShell@2
+    displayName: "env - inline"
+    env:
+      envVariable: envVariableValue
+    inputs:
+      pwsh: true
+      targetType: inline
+      script: |
+        Write-Output "Value: $($env:ENVVARIABLE)"
+
+  - task: PowerShell@2
+    displayName: "env - filePath"
+    env:
+      envVariable: envVariableValue
+    inputs:
+      pwsh: true
+      targetType: filePath
+      filePath: "$(System.DefaultWorkingDirectory)/script.ps1"
+      arguments: -Value $($env:ENVVARIABLE)
