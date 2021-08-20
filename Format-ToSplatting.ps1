@@ -3,14 +3,14 @@
    Format-ToSplatting - Format parameters to splatting
 .DESCRIPTION
    Function helps formatting parameters to splatting
-   Splatting is a method of passing a collection of parameter values to a command as unit. PowerShell associates each 
-   value in the collection with a command parameter. Splatted parameter values are stored in named splatting variables, 
-   which look like standard variables, but begin with an At symbol (@) instead of a dollar sign ($). The At symbol tells 
+   Splatting is a method of passing a collection of parameter values to a command as unit. PowerShell associates each
+   value in the collection with a command parameter. Splatted parameter values are stored in named splatting variables,
+   which look like standard variables, but begin with an At symbol (@) instead of a dollar sign ($). The At symbol tells
    PowerShell that you are passing a collection of values, instead of a single value.
    https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-6
 .EXAMPLE
    PS C:\> Format-ToSplatting -Name 'Get-Help'
-   
+
    $parameterGetHelp = @{
      Category                       = "Displays help only for items in the specified category and their aliases."
      Component                      = "Displays commands with the specified component value, such as 'Exchange."
@@ -24,9 +24,9 @@
      Path                           = "Gets help that explains how the cmdlet works in the specified provider path."
      Role                           = "Displays help customized for the specified user role."
      ShowWindow                     = "Displays the help topic in a window for easier reading."
-   } 
+   }
 .EXAMPLE
-   PS C:\> Get-Help *DbaDatabase | Format-ToSplatting 
+   PS C:\> Get-Help *DbaDatabase | Format-ToSplatting
    $parameterAttachDbaDatabase = @{
      SqlInstance                    = "The SQL Server instance."
      SqlCredential                  = "Login to the target instance using alternative credentials."
@@ -37,7 +37,7 @@
      EnableException                = "By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message."
      WhatIf                         = "If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run."
      Confirm                        = "If this switch is enabled, you will be prompted for confirmation before executing any operations that change state."
-   } 
+   }
 $parameterDetachDbaDatabase = @{
      SqlInstance                    = "The SQL Server instance."
      SqlCredential                  = "Login to the target instance using alternative credentials."
@@ -46,7 +46,7 @@ $parameterDetachDbaDatabase = @{
      UpdateStatistics               = "If this switch is enabled, statistics for the database will be updated prior to detaching it."
      (...)
 .EXAMPLE
-   PS C:\> 'Get-Command', 'Get-Help' | Format-ToSplatting 
+   PS C:\> 'Get-Command', 'Get-Help' | Format-ToSplatting
   $parameterGetCommand = @{
      All                            = "Gets all commands, including commands of the same type that have the same name."
      ArgumentList                   = "Gets information about a cmdlet or function when it is used with the specified  parameters ('arguments')."
@@ -60,7 +60,7 @@ $parameterDetachDbaDatabase = @{
      ListImported                   = "Gets only commands in the current session."
      ParameterName                  = "Gets commands in the session that have the specified parameters."
      ParameterType                  = "Gets commands in the session that have parameters of the specified type."
- } 
+ }
 $parameterGetHelp = @{
      Category                       = "Displays help only for items in the specified category and their aliases."
      Component                      = "Displays commands with the specified component value, such as 'Exchange."
@@ -74,51 +74,66 @@ $parameterGetHelp = @{
      Path                           = "Gets help that explains how the cmdlet works in the specified provider path."
      Role                           = "Displays help customized for the specified user role."
      ShowWindow                     = "Displays the help topic in a window for easier reading."
-} 
+}
 .LINK
-   Author: Mateusz Nadobnik 
+   Author: Mateusz Nadobnik
    Link: mnadobnik.pl
- 
-   Date: 
-   Version: 1.0.0.0 
-   Keywords: 
-   Notes: 
+
+   Date:
+   Version: 1.0.0.0
+   Keywords:
+   Notes:
    Changelog:
-#> 
-function Format-ToSplatting {
+#>
+function Format-ToSplatting
+{
     [cmdletbinding()]
     param (
-        [Parameter(Mandatory,ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [string]$Name
+        [Parameter(Mandatory, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string]$Name,
+        [switch]$Required
     )
-    process {
-        foreach($Function in $Name) {
+    process
+    {
+        foreach ($Function in $Name)
+        {
             # Name parameter
             $VariableName = "parameter$($Function.Replace('-',''))"
             # Get Parameter
-            $Parameters = Get-Help -Name $Function -Parameter * | Select-Object Name, Description
-       
-            # 
+
+            $Parameters = if ($Required.IsPresent)
+            {
+                Get-Help -Name $Function -Parameter * | Where-Object required -EQ $true
+            }
+            else
+            {
+                Get-Help -Name $Function -Parameter * | Select-Object Name, Description
+            }
+
             "$([char]36)$VariableName = @{"
-            ForEach($Parameter in $Parameters) 
+            ForEach ($Parameter in $Parameters)
             {
                 $ParameterName = ($Parameter.Name).PadRight(30)
                 # Deleting all new lines
-                $FlatDescription = "$($Parameter.Description.Text -replace "`n|`r|`t")".Trim(',')
+                $FlatDescription = "$(($Parameter.Description.Text -replace "`n|`r|`t") -replace '\s', '_')".Trim(',')
                 # Getting description to the first dot
-                $DescriptionToDot = $FlatDescription.Substring(0,($FlatDescription.IndexOf('.')+1))
+                $DescriptionToDot = $FlatDescription.Substring(0, $FlatDescription.IndexOf('.') + 1)
 
                 # Checking lenght
-                If($DescriptionToDot.Length -gt 200) {
-                    $Description = ($FlatDescription.Substring(0,160)).TrimStart().Replace('"',"'")
+                If ($DescriptionToDot.Length -gt 200)
+                {
+                    $Description = ($FlatDescription.Substring(0, 160)).TrimStart().Replace('"', "'")
                 }
-                else {
-                    $Description = ($DescriptionToDot).TrimStart().Replace('"',"'")
+                else
+                {
+                    $Description = ($DescriptionToDot).TrimStart().Replace('"', "'")
                 }
 
                 "     $ParameterName = ""$Description"""
             }
-            "} `n"
+            "} `t
+$Name $([char]64)$VariableName"
+
         }
     }
 }
