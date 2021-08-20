@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.63.48766",
+      "templateHash": "7365397410475531260"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "defaultValue": "aa-clouddb-prod"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "rg-shared"
+    }
+  },
+  "functions": [],
+  "resources": [
+    {
+      "type": "Microsoft.Automation/automationAccounts/modules",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "env": "TEST"
+      },
+      "properties": {
+        "contentLink": {
+          // "contentHash": {
+          //   "algorithm": "string",
+          //   "value": "string"
+          // },
+          "uri": "https://www.powershellgallery.com/api/v2/package/Az.Accounts",
+          "version": "2.5.2"
+        }
+      }
+    }
+  ]
+}
